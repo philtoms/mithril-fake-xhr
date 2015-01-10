@@ -18,12 +18,28 @@ function testMithrilFakeXhr(mock) {
 
 	var fake = mithrilFakeXhr(mock);
 
-	// mock
+	// Mocking
+
+	// expected
 	test(function() {
 		var response = fake('get','/test1').respondWith('abc')
 		m.request({method:'GET', url:'/test1'});
 		return response.count==1;
 	});
+
+	// unexpected
+	test(function() {
+		m.request({method:'GET', url:'/test/xxx'});
+		return fake.unexpectedRequests !== 0;
+	});
+
+	// unresolved
+	test(function() {
+		var response = fake('get','/test1/yyy').respondWith('abc')
+		return response.count === 0;
+	});
+
+	// Stubbing
 
 	// GET
 	test(function() {
