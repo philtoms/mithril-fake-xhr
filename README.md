@@ -2,7 +2,7 @@
 
 # Mithril-fake-xhr
 
-A fake XHR handler for testing Mithrl apps
+A fake XHR handler for testing Mithril apps
 
 Documentation under way. Please review tests for usage.
 
