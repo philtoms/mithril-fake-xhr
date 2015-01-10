@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/philtoms/mithril-fake-xhr.js.svg?branch=master)](https://travis-ci.org/philtoms/mithril-fake-xhr.js)
+[![Build Status](https://travis-ci.org/philtoms/mithril-fake-xhr.svg?branch=master)](https://travis-ci.org/philtoms/mithril-fake-xhr)
 
 # Mithril-fake-xhr
 
