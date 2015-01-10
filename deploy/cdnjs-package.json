@@ -1,0 +1,33 @@
+{
+  "name": "mithril-fake.xhr",
+  "npmName": "mithril-fake.xhr",
+  "version": "$version",
+  "filename": "mithril-fake.xhr.js",
+  "description": "A fake XHR handler for testing Mithrl apps",
+  "homepage": "http://philtoms.github.io/mithril-fake.xhr",
+  "license": "MIT",
+  "main": "mithril-fake.xhr",
+  "keywords": [
+    "mithril",
+    "browser",
+    "xhr",
+    "XMLHttpRequest"
+  ],
+  "author": "Phil Toms <phil.toms@hotmail.co.uk> (http://philtoms.github.io/mithril-fake-xhr)",
+  "contributors": [
+    "Phil Toms <phil.toms@hotmail.co.uk> (http://philtoms.github.io/mithril-fake-xhr)"
+  ],
+  "bugs": "https://github.com/philtoms/mithril-fake-xhr/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/philtoms/mithril-fake-xhr.git"
+  },
+  "npmFileMap": [
+    {
+      "basePath": "/",
+      "files": [
+        "mithril-fake-xhr.js"
+      ]
+    }
+  ]
+}
