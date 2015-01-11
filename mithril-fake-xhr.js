@@ -100,10 +100,6 @@ var mithrilFakeXhr = function(base) {
       },
       get count() {
         return count;
-      },
-      reset: function() {
-        pending = {};
-        unexpectedRequests = 0;
       }
     };
     
@@ -130,6 +126,11 @@ var mithrilFakeXhr = function(base) {
       }
   });
 
+  fake.reset = function() {
+    pending = {};
+    unexpectedRequests = 0;
+  };
+  
   return fake;
 
 };

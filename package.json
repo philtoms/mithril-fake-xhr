@@ -1,8 +1,13 @@
 {
 	"name": "mithril-fake-xhr",
-	"version": "0.1.0",
+	"description": "A fake XHR handler for testing Mithrl apps",
+	"version": "0.1.1",
 	"scripts": {
 		"test": "grunt test"
+	},
+	"repository" : { 
+	    "type" : "git",
+	    "url" : "http://github.com/philtoms/mithrilfake-xhr"
 	},
 	"main": "mithril-fake-xhr.js",
 	"devDependencies": {
