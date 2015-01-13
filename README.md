@@ -19,32 +19,28 @@ npm install --save-dev mithril-fake-xhr
 
 	// expected
 	test(function() {
-		var response = fakeXHR('get','/test1').respondWith('abc')
-	  // somewhere in code under test...
-	  // sut.method() {
-    		m.request({method:'GET', url:'/test1'});
-	  // }
-
-		return response.count===1;
+		var response = fakeXHR('get','/test1');
+		m.request({method:'GET', url:'/test1'});
+		return response.count==1;
 	});
 
 	// unexpected
 	test(function() {
-	  // somewhere in code under test...
-	  // sut.method() {
-    		m.request({method:'GET', url:'/test/xxx'});
-	  // }
-
+		m.request({method:'GET', url:'/test/xxx'});
 		return fakeXHR.unexpectedRequests !== 0;
 	});
 
+	// unexpected payload
+	test(function() {
+		fakeXHR('post','/test4', {p1:1,p2:2});
+		m.request({method:'POST', url:'/test4', data:{p1:'xx',p2:'yyy'}})
+		return fakeXHR.unexpectedRequests !== 0;
+	});
+
+
 	// unresolved
 	test(function() {
-		var response = fakeXHR('get','/test1/yyy').respondWith('abc')
-
-	  // somewhere in code under test...
-	  // sut.method() {}
-
+		var response = fakeXHR('get','/test1/yyy');
 		return response.count === 0;
 	});
 
@@ -53,7 +49,7 @@ npm install --save-dev mithril-fake-xhr
 	// GET
 	test(function() {
 		var data;
-		fakeXHR('get','/test2').respondWith('abc')
+		fakeXHR('get','/test2').respondWith('abc');
 		m.request({method:'GET', url:'/test2'}).then(function(response){
 			data = response;
 		});
@@ -63,7 +59,7 @@ npm install --save-dev mithril-fake-xhr
 	// params
 	test(function() {
 		var data;
-		fakeXHR('get','/test3\\?p1=1&p2=2').respondWith({p1:'one',p2:'two'})
+		fakeXHR('get','/test3\\?p1=1&p2=2').respondWith({p1:'one',p2:'two'});
 		m.request({method:'GET', url:'/test3?p1=1&p2=2'}).then(function(response){
 			data = response;
 		});
@@ -73,7 +69,7 @@ npm install --save-dev mithril-fake-xhr
 	// regex params
 	test(function() {
 		var data;
-		fakeXHR('get','/test3\\?p1=.+&p2=\\d+').respondWith({p1:'ABC',p2:'onetwothree'})
+		fakeXHR('get','/test3\\?p1=.+&p2=\\d+').respondWith({p1:'ABC',p2:'onetwothree'});
 		m.request({method:'GET', url:'/test3?p1=abc&p2=123'}).then(function(response){
 			data = response;
 		});
@@ -83,21 +79,39 @@ npm install --save-dev mithril-fake-xhr
 	// POST
 	test(function() {
 		var data;
-		fakeXHR('post','/test4', {p1:1,p2:2}).respondWith({p1:'one',p2:'two'})
+		fakeXHR('post','/test4').respondWith({p1:'one',p2:'two'});
 		m.request({method:'POST', url:'/test4', data:{p1:1,p2:2}}).then(function(response){
 			data = response;
 		});
 		return data.p1==='one' && data.p2==='two';
 	});
 
-	// PASSTHROUGH
+	// errors
 	test(function() {
 		var data;
-		var response = fakeXHR('get','/test5').passthrough()
+		fakeXHR('get','/test6').respondWith(404,'file not found');
+		m.request({method:'GET', url:'/test6'}).then(undefined, function(response){
+			data=response;
+		});
+		return data==='file not found';
+	});
+
+	// reset
+	test(function() {
+		fakeXHR('get','/test/7');
+		fakeXHR.reset();
+		m.request({method:'GET', url:'/test/7'});
+		return fakeXHR.unexpectedRequests !== 0;
+	});
+
+	// passthrough
+	test(function() {
+		var data;
+		var response = fakeXHR('get','/test5').passthrough();
 		m.request({method:'GET', url:'/test5'}).then(function(response){
 			data = response;
 		});
-		return data==='ABC';
+		return data === 'ABC';
 	});
 
 	// modify response data
@@ -109,10 +123,10 @@ npm install --save-dev mithril-fake-xhr
 		m.request({method:'GET', url:'/test5'}).then(function(response){
 			data = response;
 		});
-		return data=='DEF';
+		return data === 'DEF';
 	});
 
-	// modify response statue
+	// modify response status
 	test(function() {
 		var data;
 		var response = fakeXHR('get','/test5').passthrough(function(status,data){
@@ -127,12 +141,21 @@ npm install --save-dev mithril-fake-xhr
 	// errors
 	test(function() {
 		var data;
-		fakeXHR('get','/test6').respondWith(404,'file not found')
+		fakeXHR('get','/test6').respondWith(404,'file not found');
 		m.request({method:'GET', url:'/test6'}).then(undefined, function(response){
 			data=response;
 		});
 		return data==='file not found';
 	});
+
+	// reset
+	test(function() {
+		fakeXHR('get','/test/7');
+		fakeXHR.reset();
+		m.request({method:'GET', url:'/test/7'});
+		return fakeXHR.unexpectedRequests !== 0;
+	});
+
 ```
 
 ### Copyright

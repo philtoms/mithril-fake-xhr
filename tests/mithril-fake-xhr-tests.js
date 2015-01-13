@@ -33,6 +33,14 @@ function testMithrilFakeXhr(mock) {
 		return fakeXHR.unexpectedRequests !== 0;
 	});
 
+	// unexpected payload
+	test(function() {
+		fakeXHR('post','/test4', {p1:1,p2:2});
+		m.request({method:'POST', url:'/test4', data:{p1:'xx',p2:'yyy'}})
+		return fakeXHR.unexpectedRequests !== 0;
+	});
+
+
 	// unresolved
 	test(function() {
 		var response = fakeXHR('get','/test1/yyy');
@@ -74,21 +82,39 @@ function testMithrilFakeXhr(mock) {
 	// POST
 	test(function() {
 		var data;
-		fakeXHR('post','/test4', {p1:1,p2:2}).respondWith({p1:'one',p2:'two'});
+		fakeXHR('post','/test4').respondWith({p1:'one',p2:'two'});
 		m.request({method:'POST', url:'/test4', data:{p1:1,p2:2}}).then(function(response){
 			data = response;
 		});
 		return data.p1==='one' && data.p2==='two';
 	});
 
-	// PASSTHROUGH
+	// errors
+	test(function() {
+		var data;
+		fakeXHR('get','/test6').respondWith(404,'file not found');
+		m.request({method:'GET', url:'/test6'}).then(undefined, function(response){
+			data=response;
+		});
+		return data==='file not found';
+	});
+
+	// reset
+	test(function() {
+		fakeXHR('get','/test/7');
+		fakeXHR.reset();
+		m.request({method:'GET', url:'/test/7'});
+		return fakeXHR.unexpectedRequests !== 0;
+	});
+
+	// passthrough
 	test(function() {
 		var data;
 		var response = fakeXHR('get','/test5').passthrough();
 		m.request({method:'GET', url:'/test5'}).then(function(response){
 			data = response;
 		});
-		return data=='ABC';
+		return data === 'ABC';
 	});
 
 	// modify response data
@@ -100,10 +126,10 @@ function testMithrilFakeXhr(mock) {
 		m.request({method:'GET', url:'/test5'}).then(function(response){
 			data = response;
 		});
-		return data=='DEF';
+		return data === 'DEF';
 	});
 
-	// modify response statue
+	// modify response status
 	test(function() {
 		var data;
 		var response = fakeXHR('get','/test5').passthrough(function(status,data){

@@ -112,7 +112,8 @@ var mithrilFakeXhr = function(base) {
       },
       response: function(){
         return api.response.apply(this,arguments);
-      }
+      },
+      data:data
     };
     return api;
   };

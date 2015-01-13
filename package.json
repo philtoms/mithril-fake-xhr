@@ -1,7 +1,7 @@
 {
 	"name": "mithril-fake-xhr",
 	"description": "A fake XHR handler for testing Mithrl apps",
-	"version": "0.1.2",
+	"version": "0.1.3",
 	"scripts": {
 		"test": "grunt test"
 	},
