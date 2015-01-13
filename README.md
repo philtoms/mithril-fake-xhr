@@ -100,6 +100,30 @@ npm install --save-dev mithril-fake-xhr
 		return data==='ABC';
 	});
 
+	// modify response data
+	test(function() {
+		var data;
+		var response = fakeXHR('get','/test5').passthrough(function(status,data){
+			return {status:status,data:'DEF'}
+		});
+		m.request({method:'GET', url:'/test5'}).then(function(response){
+			data = response;
+		});
+		return data=='DEF';
+	});
+
+	// modify response statue
+	test(function() {
+		var data;
+		var response = fakeXHR('get','/test5').passthrough(function(status,data){
+			return {status:403,data:'Forbidden'}
+		});
+		m.request({method:'GET', url:'/test5'}).then(null,function(response){
+			data = response;
+		});
+		return data=='Forbidden';
+	});
+
 	// errors
 	test(function() {
 		var data;

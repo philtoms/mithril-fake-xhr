@@ -4,7 +4,7 @@ var mithrilFakeXhr = function(base) {
 
   base = base || window;
   var SaveXML = base.XMLHttpRequest; 
-
+  var noop = function(){};
   var pending = {};
   var unexpectedRequests = 0;
     
@@ -45,15 +45,16 @@ var mithrilFakeXhr = function(base) {
             var passthroughXhr = request.xhr;
             passthroughXhr.onreadystatechange = function() {
               if (passthroughXhr.readyState === 4) {
-                request.response(passthroughXhr.responseText);
-                xhr.status = passthroughXhr.status;
-                xhr.readyState = passthroughXhr.readyState;
-                xhr.responseText = passthroughXhr.responseText;
+                var response = request.passthroughCb(passthroughXhr.status,JSON.parse(passthroughXhr.responseText));
+                request.response(response.data);
+                xhr.status = response.status;
+                xhr.responseText = JSON.stringify(response.data);
+                xhr.readyState = 4;
                 xhr.onreadystatechange();
               }
             };
-            request.$headers = xhr.$headers;
-            return request.xhr.send(data);
+            passthroughXhr.$headers = xhr.$headers;
+            passthroughXhr.send(data);
           }
           else {
             xhr.status = request.status();
@@ -95,8 +96,9 @@ var mithrilFakeXhr = function(base) {
         return api;
       },
       response:response,
-      passthrough: function() {
+      passthrough: function(cb) {
         pending[key].passthrough = true;
+        pending[key].passthroughCb = cb || function(s,d){return {status:s,data:d};};
         return api;
       },
       get count() {
