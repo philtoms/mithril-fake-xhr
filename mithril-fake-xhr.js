@@ -42,12 +42,13 @@ var mithrilFakeXhr = function(base) {
         xhr.responseText='';
         if (request && (request.data === undefined || JSON.stringify(request.data) == data)) {
           if (request.passthrough){
-            request.xhr.onreadystatechange = function() {
-              if (request.xhr.readyState === 4) {
-                request.response(request.xhr.responseText);
-                xhr.status = request.xhr.status;
-                xhr.readyState = request.xhr.readyState;
-                xhr.responseText = request.xhr.responseText;
+            var passthroughXhr = request.xhr;
+            passthroughXhr.onreadystatechange = function() {
+              if (passthroughXhr.readyState === 4) {
+                request.response(passthroughXhr.responseText);
+                xhr.status = passthroughXhr.status;
+                xhr.readyState = passthroughXhr.readyState;
+                xhr.responseText = passthroughXhr.responseText;
                 xhr.onreadystatechange();
               }
             };
